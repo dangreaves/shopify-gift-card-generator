@@ -4,16 +4,14 @@
 
 CLI tool for generating Shopify gift cards from CSV files.
 
-> [!CAUTION]
-> To enable detection of duplicates, this tool uses the [Sync API](https://csv.js.org/parse/api/sync) for CSV parsing, not the streaming API. This means that your import CSV must be small enough to fit into memory. If your CSV is too big, consider breaking it up into smaller files.
-
 ## Preparing customer file
+
+> [!NOTE]
+> To enable detection of duplicates, this tool uses the [Sync API](https://csv.js.org/parse/api/sync) for CSV parsing, not the streaming API. This means that your import CSV must be small enough to fit into memory. If your CSV is too big, consider breaking it up into smaller files.
 
 You must prepare a CSV containing the customers and amounts for the generated gift cards.
 
-It should include the following fields.
-
-| Field      | Description                                                                                                             |
+| Attribute  | Description                                                                                                             |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
 | first_name | First name for customer. This will be used to create the customer if a customer with this email does not already exist. |
 | last_name  | First name for customer. This will be used to create the customer if a customer with this email does not already exist. |
