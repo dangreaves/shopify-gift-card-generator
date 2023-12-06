@@ -30,9 +30,9 @@ export function generateGiftCards({
   const customersWithGiftCards: CustomerWithGiftCard[] = customers.map(
     (customer) => ({
       ...customer,
-      note: note ?? null,
       code: generateCode({ prefix }),
       expires: expires ?? null,
+      note: note ?? null,
     }),
   );
 
