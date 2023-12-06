@@ -89,7 +89,7 @@ npm start -- import-gift-cards \
 --suppress-email
 ```
 
-### Obtaining a Shopify access token
+## Obtaining a Shopify access token
 
 Shopify regularly update this process, so here's a quick guide for creating a token.
 
