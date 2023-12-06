@@ -1,0 +1,12 @@
+{
+  "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node20/tsconfig"],
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

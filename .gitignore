@@ -1,0 +1,36 @@
+# Mac
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# npm
+node_modules/
+.npm/
+
+# CDK
+cdk.out/
+
+# Next
+.next/
+.open-next/
+
+# Dist
+dist/
+
+# Astro
+.astro/
+
+# Env
+.envrc
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Tmp files
+tmp/
