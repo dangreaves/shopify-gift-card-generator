@@ -1,6 +1,8 @@
 import z from "zod";
 import fs from "node:fs";
+
 import { parse } from "csv-parse/sync";
+import { stringify } from "csv-stringify/sync";
 
 /**
  * Parse the given CSV customer file.
@@ -31,15 +33,6 @@ export function parseCustomerFile(file: string) {
 
   return records as Customer[];
 }
-
-const CustomerSchema = z.object({
-  first_name: z.string().min(1),
-  last_name: z.string().min(1),
-  email: z.string().min(1).email(),
-  amount: z.coerce.number(),
-});
-
-type Customer = z.infer<typeof CustomerSchema>;
 
 /**
  * Validate the given customers for correctness.
@@ -89,3 +82,29 @@ export function validateCustomers(customers: Customer[]) {
     totalCustomers: customers.length,
   };
 }
+
+/**
+ * Write the given codes to file.
+ */
+export function writeCodesFile(
+  file: string,
+  customers: CustomerWithGiftCard[],
+) {
+  const csv = stringify(customers, { header: true });
+  fs.writeFileSync(file, csv);
+}
+
+const CustomerSchema = z.object({
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
+  email: z.string().min(1).email(),
+  amount: z.coerce.number(),
+});
+
+const CustomerWithGiftCardSchema = CustomerSchema.extend({
+  code: z.string().min(1),
+  expires: z.string().min(1).nullable(),
+});
+
+export type Customer = z.infer<typeof CustomerSchema>;
+export type CustomerWithGiftCard = z.infer<typeof CustomerWithGiftCardSchema>;
