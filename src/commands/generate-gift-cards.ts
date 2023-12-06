@@ -1,17 +1,20 @@
 import { generateCode } from "@/lib/codes.js";
 
 import {
-  writeCodesFile,
+  writeGiftCardFile,
   parseCustomerFile,
   validateCustomers,
+  type CustomerWithGiftCard,
 } from "@/lib/csv.js";
 
-export function generateCodes({
+export function generateGiftCards({
+  note,
   input,
   output,
   prefix,
   expires,
 }: {
+  note?: string;
   input: string;
   output: string;
   prefix?: string;
@@ -24,15 +27,18 @@ export function generateCodes({
   validateCustomers(customers);
 
   // Loop customers and append codes.
-  const customersWithGiftCards = customers.map((customer) => ({
-    ...customer,
-    code: generateCode({ prefix }),
-    expires: expires ?? null,
-  }));
+  const customersWithGiftCards: CustomerWithGiftCard[] = customers.map(
+    (customer) => ({
+      ...customer,
+      note: note ?? null,
+      code: generateCode({ prefix }),
+      expires: expires ?? null,
+    }),
+  );
 
   // Write codes to file.
-  writeCodesFile(output, customersWithGiftCards);
+  writeGiftCardFile(output, customersWithGiftCards);
 
   // Finish.
-  console.log(`${customers.length} codes written to file.`);
+  console.log(`${customers.length} gift cards written to file.`);
 }

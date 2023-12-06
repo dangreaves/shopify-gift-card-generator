@@ -84,9 +84,9 @@ export function validateCustomers(customers: Customer[]) {
 }
 
 /**
- * Write the given codes to file.
+ * Write the given gift cards to file.
  */
-export function writeCodesFile(
+export function writeGiftCardFile(
   file: string,
   customers: CustomerWithGiftCard[],
 ) {
@@ -103,6 +103,7 @@ const CustomerSchema = z.object({
 
 const CustomerWithGiftCardSchema = CustomerSchema.extend({
   code: z.string().min(1),
+  note: z.string().nullable(),
   expires: z.string().min(1).nullable(),
 });
 
