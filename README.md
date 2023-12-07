@@ -82,9 +82,12 @@ This works by creating the gift card without a customer first, and then attachin
 
 You need to provide a Shopify access token with the `write_customers` and `write_gift_cards` scopts for the `--token` attribute. See the [Obtaining a Shopify access token](#obtaining-a-shopify-access-token) section if you're not sure how to do that.
 
+The command will output a results file in CSV format, which is the same as your input gift cards file, but with additional `customer_id`, `gift_card_id` and `error` columns. You should review this file after the command completes to check that all the gift cards were created successfully.
+
 ```sh
 npm start -- import-gift-cards \
 --input ./path/to/gift-cards.csv \
+--output ./path/to/results.csv \
 --token ACCESS_TOKEN \
 --shopify-domain foo.myshopify.com \
 --suppress-email
