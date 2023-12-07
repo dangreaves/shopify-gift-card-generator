@@ -15,6 +15,7 @@ export function createAdminApiClient({
   storeDomain: string;
 }): AdminApiClient {
   return _createAdminApiClient({
+    retries: 3,
     storeDomain,
     accessToken,
     apiVersion: "2023-04",
