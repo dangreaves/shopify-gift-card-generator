@@ -7,16 +7,21 @@
   "scripts": {
     "prepare": "husky install",
     "format": "prettier --write .",
-    "start": "tsx ./src/index.ts"
+    "start": "tsx ./src/index.ts",
+    "graphql-codegen": "graphql-codegen"
   },
   "dependencies": {
+    "@shopify/admin-api-client": "^0.1.0",
     "commander": "^11.1.0",
     "csv-parse": "^5.5.2",
     "csv-stringify": "^6.4.4",
+    "graphql": "^16.8.1",
     "nanoid": "^5.0.4",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@shopify/api-codegen-preset": "^0.0.1",
     "@tsconfig/node20": "^20.1.2",
     "@tsconfig/strictest": "^2.0.2",
     "@types/node": "^20",
