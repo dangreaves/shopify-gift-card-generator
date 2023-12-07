@@ -84,6 +84,30 @@ export function validateCustomers(customers: Customer[]) {
 }
 
 /**
+ * Parse the given gift card file.
+ */
+export function parseGiftCardFile(file: string) {
+  const buffer = fs.readFileSync(file);
+
+  let records = parse(buffer, {
+    bom: true,
+    columns: true,
+    skip_empty_lines: true,
+  });
+
+  for (const record of records) {
+    const result = CustomerWithGiftCardSchema.safeParse(record);
+
+    if (!result.success) {
+      console.error("Record failed validation", record);
+      throw result.error;
+    }
+  }
+
+  return records as CustomerWithGiftCard[];
+}
+
+/**
  * Write the given gift cards to file.
  */
 export function writeGiftCardFile(
