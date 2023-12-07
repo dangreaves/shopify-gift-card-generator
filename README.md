@@ -86,6 +86,7 @@ You need to provide a Shopify access token with the `write_customers` and `write
 npm start -- import-gift-cards \
 --input ./path/to/gift-cards.csv \
 --token ACCESS_TOKEN \
+--shopify-domain foo.myshopify.com \
 --suppress-email
 ```
 
