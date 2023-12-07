@@ -14,7 +14,7 @@ This script allows you to import a list of customers, each with a desired gift c
 
 Then, when you're ready to actually create the gift cards in Shopify, run the import command which will take the generated codes and create them in Shopify. Optionally, you may suppress the generic gift card email which Shopify usually sends to the customer.
 
-## Using the tool
+## Usage
 
 1. [Install dependencies](#install-dependencies)
 2. [Prepare customer file](#prepare-customer-file)
