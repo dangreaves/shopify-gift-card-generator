@@ -133,7 +133,7 @@ const CustomerSchema = z.object({
   first_name: z.string().min(1),
   last_name: z.string().min(1),
   email: z.string().min(1).email(),
-  amount: z.coerce.number(),
+  amount: z.string(),
 });
 
 const CustomerWithGiftCardSchema = CustomerSchema.extend({

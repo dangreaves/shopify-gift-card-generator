@@ -29,8 +29,8 @@ export class Importer {
     giftCards,
     suppressEmail,
   }: {
-    giftCards: CustomerWithGiftCard[];
     suppressEmail?: boolean;
+    giftCards: CustomerWithGiftCard[];
   }): Promise<CustomerWithGiftCardResult[]> {
     return new Promise((resolve) => {
       // 2 requests at once, max 2 requests per second.
@@ -58,12 +58,30 @@ export class Importer {
               firstName: giftCard.first_name,
             });
 
-            giftCardResults.push({
-              ...giftCard,
-              customer_id: customer.id,
-              gift_card_id: null,
-              error: null,
-            });
+            try {
+              const shopifyGiftCard = await this._createGiftCard({
+                suppressEmail,
+                code: giftCard.code,
+                note: giftCard.note,
+                customerId: customer.id,
+                expiresOn: giftCard.expires,
+                initialValue: giftCard.amount,
+              });
+
+              giftCardResults.push({
+                ...giftCard,
+                customer_id: customer.id,
+                gift_card_id: shopifyGiftCard.id,
+                error: null,
+              });
+            } catch (e) {
+              giftCardResults.push({
+                ...giftCard,
+                customer_id: customer.id,
+                gift_card_id: null,
+                error: e instanceof Error ? e.message : "Unknown error",
+              });
+            }
           } catch (e) {
             giftCardResults.push({
               ...giftCard,
@@ -94,7 +112,7 @@ export class Importer {
     lastName: string;
     firstName: string;
   }) {
-    const { data, errors, extensions } = await this.shopify.request(
+    const { data, errors } = await this.shopify.request(
       CUSTOMER_CREATE_MUTATION,
       {
         variables: {
@@ -162,6 +180,109 @@ export class Importer {
 
     return data?.customers.edges[0]?.node ?? null;
   }
+
+  /**
+   * Create Shopify gift card with the given attributes.
+   *
+   * If the suppressEmail option is enabled, the gift card will first be
+   * created unattached to a customer, and then attached in a second
+   * API request. This avoids the generic gift card email being
+   * sent from Shopify.
+   */
+  protected async _createGiftCard({
+    code,
+    note,
+    expiresOn,
+    customerId,
+    initialValue,
+    suppressEmail,
+  }: {
+    code: string;
+    customerId: string;
+    note?: string | null;
+    initialValue: string;
+    expiresOn?: string | null;
+    suppressEmail?: boolean | null;
+  }) {
+    const { data, errors } = await this.shopify.request(
+      GIFT_CARD_CREATE_MUTATION,
+      {
+        variables: {
+          input: {
+            code,
+            note,
+            expiresOn,
+            initialValue,
+            ...(!suppressEmail ? { customerId } : {}),
+          },
+        },
+      },
+    );
+
+    if (errors) {
+      console.dir(errors.graphQLErrors, { depth: null });
+      throw new Error(errors.message);
+    }
+
+    if (!data?.giftCardCreate) {
+      throw new Error("No giftCardCreate returned.");
+    }
+
+    if (data.giftCardCreate.userErrors[0]?.message) {
+      throw new Error(data.giftCardCreate.userErrors[0].message);
+    }
+
+    if (!data.giftCardCreate.giftCard) {
+      throw new Error(
+        "No giftCard returned from giftCardCreate. No userErrors.",
+      );
+    }
+
+    const giftCard = data.giftCardCreate.giftCard;
+
+    // Attach customer in a second request if suppressEmail is enabled.
+    if (suppressEmail) {
+      await this._assignGiftCard({ giftCardId: giftCard.id, customerId });
+    }
+
+    return giftCard;
+  }
+
+  /**
+   * Assign gift card to the given customer.
+   */
+  protected async _assignGiftCard({
+    giftCardId,
+    customerId,
+  }: {
+    giftCardId: string;
+    customerId: string;
+  }) {
+    const { data, errors } = await this.shopify.request(
+      GIFT_CARD_UPDATE_MUTATION,
+      {
+        variables: {
+          id: giftCardId,
+          input: {
+            customerId,
+          },
+        },
+      },
+    );
+
+    if (errors) {
+      console.dir(errors.graphQLErrors, { depth: null });
+      throw new Error(errors.message);
+    }
+
+    if (!data?.giftCardUpdate) {
+      throw new Error("No giftCardUpdate returned.");
+    }
+
+    if (data.giftCardUpdate.userErrors[0]?.message) {
+      throw new Error(data.giftCardUpdate.userErrors[0].message);
+    }
+  }
 }
 
 const CUSTOMER_CREATE_MUTATION = /* GraphQL */ `
@@ -185,6 +306,34 @@ const CUSTOMERS_QUERY = /* GraphQL */ `
         node {
           id
         }
+      }
+    }
+  }
+`;
+
+const GIFT_CARD_CREATE_MUTATION = /* GraphQL */ `
+  mutation giftCardCreate($input: GiftCardCreateInput!) {
+    giftCardCreate(input: $input) {
+      giftCard {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+const GIFT_CARD_UPDATE_MUTATION = /* GraphQL */ `
+  mutation giftCardUpdate($id: ID!, $input: GiftCardUpdateInput!) {
+    giftCardUpdate(id: $id, input: $input) {
+      giftCard {
+        id
+      }
+      userErrors {
+        field
+        message
       }
     }
   }
