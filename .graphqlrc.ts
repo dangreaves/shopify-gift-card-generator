@@ -3,7 +3,7 @@
 import { shopifyApiProject, ApiType } from "@shopify/api-codegen-preset";
 
 export default {
-  schema: "https://shopify.dev/admin-graphql-direct-proxy/2023-10",
+  schema: "https://shopify.dev/admin-graphql-direct-proxy",
   documents: ["./src/**/*.{js,ts,jsx,tsx}"],
   projects: {
     default: shopifyApiProject({
