@@ -1,6 +1,6 @@
 import { Importer } from "@/lib/importer.js";
-import { parseGiftCardFile } from "@/lib/csv.js";
 import { createAdminApiClient } from "@/lib/shopify.js";
+import { parseGiftCardFile, writeResultsFile } from "@/lib/csv.js";
 
 export async function importGiftCards({
   token,
@@ -27,11 +27,14 @@ export async function importGiftCards({
   });
 
   // Import gift cards.
-  const result = await importer.importGiftCards({
+  const results = await importer.importGiftCards({
     giftCards,
     suppressEmail,
   });
 
+  // Write results to file.
+  writeResultsFile(output, results);
+
   // Finish.
-  console.log(`${result.giftCardCreatedCount} gift cards imported.`);
+  console.log(`${results.length} gift cards imported.`);
 }

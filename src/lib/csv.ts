@@ -118,6 +118,17 @@ export function writeGiftCardFile(
   fs.writeFileSync(file, csv);
 }
 
+/**
+ * Write the given gift card results to file.
+ */
+export function writeResultsFile(
+  file: string,
+  results: CustomerWithGiftCardResult[],
+) {
+  const csv = stringify(results, { header: true });
+  fs.writeFileSync(file, csv);
+}
+
 const CustomerSchema = z.object({
   first_name: z.string().min(1),
   last_name: z.string().min(1),
@@ -131,5 +142,14 @@ const CustomerWithGiftCardSchema = CustomerSchema.extend({
   expires: z.string().min(1).nullable(),
 });
 
+const CustomerWithGiftCardResultSchema = CustomerWithGiftCardSchema.extend({
+  customer_id: z.string().nullable(),
+  gift_card_id: z.string().nullable(),
+  error: z.string().nullable(),
+});
+
 export type Customer = z.infer<typeof CustomerSchema>;
 export type CustomerWithGiftCard = z.infer<typeof CustomerWithGiftCardSchema>;
+export type CustomerWithGiftCardResult = z.infer<
+  typeof CustomerWithGiftCardResultSchema
+>;
