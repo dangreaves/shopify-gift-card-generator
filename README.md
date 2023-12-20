@@ -1,10 +1,10 @@
-# 🎁 shopify-gift-card-generator
-
-> CLI tool for generating Shopify gift cards from CSV files.
+# CLI tool for generating Shopify gift cards from CSV files
 
 ![GitHub License](https://img.shields.io/github/license/dangreaves/shopify-gift-card-generator)
 
-## Why?
+This CLI generates gift card codes from a CSV containing recipient email addresses. Those generated codes are then mass imported into Shopify using the [Shopify Admin API](https://shopify.dev/docs/api/admin-graphql).
+
+## Motivation
 
 In Shopify, it's not possible to mass create gift cards and see their codes prior to activation.
 
