@@ -13,11 +13,11 @@
   "dependencies": {
     "@shopify/admin-api-client": "^0.1.0",
     "commander": "^11.1.0",
-    "csv-parse": "^5.5.2",
-    "csv-stringify": "^6.4.4",
+    "csv-parse": "^5.5.3",
+    "csv-stringify": "^6.4.5",
     "graphql": "^16.8.1",
     "nanoid": "^5.0.4",
-    "p-queue": "^7.4.1",
+    "p-queue": "^8.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -25,12 +25,12 @@
     "@shopify/api-codegen-preset": "^0.0.1",
     "@tsconfig/node20": "^20.1.2",
     "@tsconfig/strictest": "^2.0.2",
-    "@types/node": "^20",
+    "@types/node": "^20.10.5",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
-    "prettier": "^3.0.3",
-    "tsx": "^4.0.0",
-    "typescript": "^5.2.2"
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
   },
   "lint-staged": {
     "*.{js,ts,css,md}": "prettier --write"
